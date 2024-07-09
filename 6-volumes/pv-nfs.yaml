@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    class: nfs
+  name: nfs
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 192.168.0.2
+    path: "/mnt/nfs"
+  storageClassName: giropops
