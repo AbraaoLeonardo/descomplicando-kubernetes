@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+kubectl delete -f nginx-pod.yaml
+kubectl delete -f nginx.configmap.yaml
+kubectl apply -f nginx-pod.yaml
+kubectl apply -f nginx.configmap.yaml
