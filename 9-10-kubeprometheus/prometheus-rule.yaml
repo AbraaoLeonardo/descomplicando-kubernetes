@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: nginx-prometheus-rule
+  namespace: monitoring
+  labels:
+    prometheus: k8s
+    role: alert-rules
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+spec:
+  groups:
+  - name: nginx-prometheus-rule
+    rules:
+      - alert: NginxDown
+        expr: nginx_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Nginx pod is down for 1 minute"
+          description: "On the cluster, one or more pod has the nginx down for 1 minute. Check for possíble error who will impact the entire production environment"
+      - alert: NginxHighRequestRate
+        expr: rate(nginx_http_requests_total[1m]) > 1
+        for: 5s
+        labels:
+          severity: warming
+        annotations:
+          summary: "The total of request is more then 10"
+          description: "The trafic can be organical, or a DDoS, check the IP from requester on the pod"
