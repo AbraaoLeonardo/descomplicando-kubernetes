@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    region: us-east-one
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx-app
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: nginx
+          ports:
+            - containerPort: 80
+              name: http
+          name: nginx
+          resources:
+            limits:
+              cpu: '0.3'
+              memory: '64Mi'
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+                    - key: 'region'
+                      operator: 'In'
+                      values: 
+                      - 'us-east-1'
+                      - 'us-weast-1'
+                      - 'sa-east-1'

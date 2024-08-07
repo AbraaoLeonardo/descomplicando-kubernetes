@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    region: us-east-one
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx-app
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: nginx
+          ports:
+            - containerPort: 80
+              name: http
+          name: nginx
+          resources:
+            limits:
+              cpu: '0.2'
+              memory: '32Mi'
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: nginx
+            topologyKey: "region"
+
